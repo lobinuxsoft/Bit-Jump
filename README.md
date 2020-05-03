@@ -25,10 +25,11 @@
 >## **Universo**
 >### Gameplay **simple**, donde se avanza por **toques y gestos** en la pantalla, la **dificultad** del juego existe en la musica, ya que esta **altera este universo** donde nos encontramos.
 
-
-<p align="">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSa5M2G2K8ei8Z9ymdIzQj2X0pTib-oFIu4LQhuAXpiSP8bTvVQ&usqp=CAU" width="128"  height="128" title="Godot Icon">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSa5M2G2K8ei8Z9ymdIzQj2X0pTib-oFIu4LQhuAXpiSP8bTvVQ&usqp=CAU" width="128"  height="128" title="Godot Icon">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSa5M2G2K8ei8Z9ymdIzQj2X0pTib-oFIu4LQhuAXpiSP8bTvVQ&usqp=CAU" width="128"  height="128" title="Godot Icon">
-    <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/55f44843377507.57ecc15d2bac3.gif" width="256" title="Godot Icon">
-</p>
+> # Juegos referencia
+> [Beat Dot](https://play.google.com/store/apps/details?id=com.dot.beat.dancing.line.ball&hl=es_419)|[Beat Stomper](https://play.google.com/store/apps/details?id=com.RockyHong.BeatStomperAndroid&hl=es_419)|[Beat Roller](https://play.google.com/store/apps/details?id=com.amanotes.pamabeatroller&hl=es_419)
+> ---|---|---
+> <img src="README/Beat Dot.gif" title="Beat Dot"> | <img src="README/Beat Stomper.gif" title="Beat Stomper"> | <img src="README/Beat Roller.gif" title="Beat Roller">
+>
+> [Hop Ball 3D](https://play.google.com/store/apps/details?id=com.amanotes.pamarollingtiles2&hl=es_419) | [Dancing Ball Z](https://play.google.com/store/apps/details?id=com.amanotes.db&hl=es_419) | [Beat Tile](https://play.google.com/store/apps/details?id=com.weegoon.beattiles&hl=es_419)
+> ---|---|---
+> <img src="README/Hop Ball 3D.gif" title="Hop Ball 3D"> | <img src="README/Dancing Ball Z.gif" title="Dancing Ball Z"> | <img src="README/Beat Tile.gif" title="Beat Tile">
