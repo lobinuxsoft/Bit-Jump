@@ -1,4 +1,4 @@
-# **Bit Jump** [![algo][0]][2]
+# **Bit Jump**
 ##### (el nombre del juego puede cambiar)
 
 >## ¿Que es **Bit Jump**?
