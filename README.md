@@ -1,9 +1,9 @@
-# **Bit Jump**
-(el nombre del juego puede cambiar)
+# **Bit Jump** [![algo][0]][2]
+##### (el nombre del juego puede cambiar)
 
 >## ¿Que es **Bit Jump**?
 >> ### Un **Rhythm Style Hyper casual game** para dispositivos mobile (*Android principalmente*).
->>   - Inspirado en:
+>>   - Referencias:
 >>       - [**Beat Dot**](https://play.google.com/store/apps/details?id=com.dot.beat.dancing.line.ball&hl=es_419) (**SENSOR NOTES**)
 >>       - [**Beat Stomper**](https://play.google.com/store/apps/details?id=com.RockyHong.BeatStomperAndroid&hl=es_419) (**Macaca Games Inc.**)
 >>       - [**Beat Roller**](https://play.google.com/store/apps/details?id=com.amanotes.pamabeatroller&hl=es_419) (**AMANOTES**) 
