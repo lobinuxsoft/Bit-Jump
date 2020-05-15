@@ -10,34 +10,21 @@ public class Circle : Area2D
     private CollisionShape2D _collisionShape2D;
     private CircleShape2D _circleShape2D;
     private Sprite _sprite;
+    private AnimationPlayer _animationPlayer;
     private float imgSize;
 
     public Position2D OrbitPosition => _orbitPosition;
 
-    public float Radius
+    public void Init(Vector2 position, float radius = 100)
     {
-        get => _radius;
-        set
-        {
-            _radius = value;
-            if(_circleShape2D != null)
-                _circleShape2D.Radius = _radius;
-            
-            if(_sprite != null)
-                _sprite.Scale = Vector2.One * _radius / imgSize;
-
-            if (_orbitPosition != null)
-                _orbitPosition.Position = new Vector2(_radius + 25, 0);
-        }
-    }
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
+        Position = position;
+        _radius = radius;
+        
         _pivot = GetNode<Node2D>("Pivot");
         _orbitPosition = GetNode<Position2D>("Pivot/OrbitPosition");
         _collisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
         _sprite = GetNode<Sprite>("Sprite");
+        _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 
         _circleShape2D = (CircleShape2D)_collisionShape2D.Shape;
         _circleShape2D.Radius = _radius;
@@ -46,8 +33,22 @@ public class Circle : Area2D
         _sprite.Scale = Vector2.One * _radius / imgSize;
 
         _orbitPosition.Position = new Vector2(_radius + 25, 0);
+
+        _rotationSpeed *= Mathf.Pow(-1, GD.Randi() % 2);
     }
-    
+
+    public async void Implode()
+    {
+        _animationPlayer.Play("implode");
+        await ToSignal(_animationPlayer, "animation_finished");
+        QueueFree();
+    }
+
+    public void Capture()
+    {
+        _animationPlayer.Play("capture");
+    }
+
     public override void _Process(float delta) 
     { 
         _pivot.Rotation += _rotationSpeed * delta; 
