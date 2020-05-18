@@ -51,7 +51,7 @@ public class Main : Node
     public void OnJumperCapture(Circle circle)
     {
         _camera.Position = circle.Position;
-        circle.Capture();
+        circle.Capture(_player);
         CallDeferred(nameof(SpawCircle), circle.Position, true);
     }
 }

@@ -54,11 +54,25 @@ public class Jumper : Area2D
         velocity = Transform.x * jumpSpeed;
     }
 
+    public void Die()
+    {
+        _target = null;
+        QueueFree();
+    }
+
     public void OnAreaEnter(Area2D area)
     {
         _target = (Circle)area;
-        _target.GetNode<Node2D>("Pivot").Rotation = (Position - _target.Position).Angle();
+        // _target.GetNode<Node2D>("Pivot").Rotation = (Position - _target.Position).Angle();
         velocity = Vector2.Zero;
         EmitSignal(nameof(OnCapture), _target);
+    }
+
+    public void ScreenExit()
+    {
+        if (_target == null)
+        {
+            Die();
+        }
     }
 }
