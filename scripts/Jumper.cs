@@ -14,6 +14,7 @@ public class Jumper : Area2D
     public Circle Target => _target;
 
     [Signal] public delegate void OnCapture(Circle circle);
+    [Signal] public delegate void OnDie();
 
     public override void _Ready()
     {
@@ -72,6 +73,7 @@ public class Jumper : Area2D
     {
         if (_target == null)
         {
+            EmitSignal(nameof(OnDie));
             Die();
         }
     }

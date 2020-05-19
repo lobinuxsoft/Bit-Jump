@@ -19,7 +19,6 @@ public class Main : Node
         _startPos = GetNode<Position2D>(_startPositionNode);
         
         GD.Randomize();
-        NewGame();
     }
 
     private void NewGame()
@@ -29,6 +28,7 @@ public class Main : Node
         _player.Position = _startPos.Position;
         AddChild(_player);
         _player.Connect("OnCapture", this, nameof(OnJumperCapture));
+        _player.Connect("OnDie", this, nameof(OnJumperDie));
         SpawCircle(_startPos.Position);
     }
 
@@ -53,5 +53,11 @@ public class Main : Node
         _camera.Position = circle.Position;
         circle.Capture(_player);
         CallDeferred(nameof(SpawCircle), circle.Position, true);
+    }
+
+    public void OnJumperDie()
+    {
+        GetTree().CallGroup("circles", "Implode");
+        GetNode<ScreensManager>("ScreensManager").GameOver();
     }
 }
