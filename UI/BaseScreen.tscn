@@ -1,15 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/BaseScreen.cs" type="Script" id=1]
-
-[sub_resource type="DynamicFontData" id=1]
-font_path = "res://assets/fonts/Xolonium-Regular.ttf"
-
-[sub_resource type="DynamicFont" id=2]
-size = 64
-extra_spacing_top = 2
-extra_spacing_bottom = 2
-font_data = SubResource( 1 )
+[ext_resource path="res://assets/fonts/Xolonium 64.tres" type="DynamicFont" id=2]
 
 [node name="BaseScreen" type="CanvasLayer"]
 offset = Vector2( 500, 0 )
@@ -37,7 +29,7 @@ custom_constants/separation = 200
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
 margin_right = 560.0
 margin_bottom = 82.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = ExtResource( 2 )
 text = "Title"
 align = 1
 

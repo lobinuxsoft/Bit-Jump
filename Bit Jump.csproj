@@ -56,6 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="scripts\BaseScreen.cs" />
     <Compile Include="scripts\Circle.cs" />
+    <Compile Include="scripts\HUD.cs" />
     <Compile Include="scripts\Jumper.cs" />
     <Compile Include="scripts\Main.cs" />
     <Compile Include="scripts\ScreensManager.cs" />

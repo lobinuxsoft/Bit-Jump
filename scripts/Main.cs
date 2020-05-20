@@ -4,25 +4,37 @@ public class Main : Node
 {
     [Export] private readonly NodePath _cameraNode = "";
     [Export] private readonly NodePath _startPositionNode = "";
+    [Export] private readonly NodePath _screenManagerNode = "";
+    [Export] private readonly NodePath _hudNode = "";
     
     private PackedScene _circle = ResourceLoader.Load<PackedScene>("res://objects/Circle.tscn");
     private PackedScene _jumper = ResourceLoader.Load<PackedScene>("res://objects/Jumper.tscn");
 
     private Jumper _player = null;
+    private int _score = 0;
 
     private Camera2D _camera;
     private Position2D _startPos;
+
+    private ScreensManager _screensManager;
+    private HUD _hud;
 
     public override void _Ready()
     {
         _camera = GetNode<Camera2D>(_cameraNode);
         _startPos = GetNode<Position2D>(_startPositionNode);
+        _screensManager = GetNode<ScreensManager>(_screenManagerNode);
+        _hud = GetNode<HUD>(_hudNode);
+        
+        _hud.Hide();
         
         GD.Randomize();
     }
 
     private void NewGame()
     {
+        _score = 0;
+        _hud.UpdateScore($"{_score}");
         _camera.Position = _startPos.Position;
         _player = (Jumper) _jumper.Instance();
         _player.Position = _startPos.Position;
@@ -30,6 +42,8 @@ public class Main : Node
         _player.Connect("OnCapture", this, nameof(OnJumperCapture));
         _player.Connect("OnDie", this, nameof(OnJumperDie));
         SpawCircle(_startPos.Position);
+        _hud.Show();
+        _hud.ShowMessage($"GO!");
     }
 
     private void SpawCircle(Vector2 startPosPosition, bool randomize = false)
@@ -53,11 +67,14 @@ public class Main : Node
         _camera.Position = circle.Position;
         circle.Capture(_player);
         CallDeferred(nameof(SpawCircle), circle.Position, true);
+        _score++;
+        _hud.UpdateScore($"{_score}");
     }
 
     public void OnJumperDie()
     {
         GetTree().CallGroup("circles", "Implode");
-        GetNode<ScreensManager>("ScreensManager").GameOver();
+        _screensManager.GameOver();
+        _hud.Hide();
     }
 }
