@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/fonts/Xolonium 64.tres" type="DynamicFont" id=1]
 [ext_resource path="res://scripts/HUD.cs" type="Script" id=2]
+[ext_resource path="res://UI/Version.tscn" type="PackedScene" id=3]
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://assets/fonts/Xolonium-Regular.ttf"
@@ -141,3 +142,5 @@ __meta__ = {
 autoplay = "init"
 anims/init = SubResource( 4 )
 anims/show_message = SubResource( 5 )
+
+[node name="Version" parent="." instance=ExtResource( 3 )]

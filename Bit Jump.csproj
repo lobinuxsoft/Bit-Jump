@@ -63,6 +63,7 @@
     <Compile Include="scripts\ScreensManager.cs" />
     <Compile Include="scripts\Settings.cs" />
     <Compile Include="scripts\SkinManager.cs" />
+    <Compile Include="scripts\Version.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
