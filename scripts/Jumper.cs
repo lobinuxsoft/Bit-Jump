@@ -10,6 +10,12 @@ public class Jumper : Area2D
     private Line2D _trail;
     
     private Circle _target = null;
+
+    private Settings _settings;
+    private AudioStreamPlayer _jumpSound;
+    private AudioStreamPlayer _captureSound;
+
+    private GameSkin _gameSkin;
     
     public Circle Target => _target;
 
@@ -20,6 +26,15 @@ public class Jumper : Area2D
     {
         Connect("area_entered", this, nameof(OnAreaEnter));
         _trail = GetNode<Line2D>("Trail/Points");
+
+        _settings = GetTree().Root.GetNode<Settings>(nameof(Settings));
+        _jumpSound = GetNode<AudioStreamPlayer>("Jump");
+        _captureSound = GetNode<AudioStreamPlayer>("Capture");
+
+        _gameSkin = SkinManager.instance.GameSkins[SkinManager.instance.skinSelected];
+        GetNode<Sprite>(nameof(Sprite)).Modulate = _gameSkin.jumperColor;
+        _trail.DefaultColor = _gameSkin.jumperColor;
+        _trail.Gradient = _gameSkin.trailGradient;
     }
 
     public override void _PhysicsProcess(float delta)
@@ -53,6 +68,11 @@ public class Jumper : Area2D
         _target.Implode();
         _target = null;
         velocity = Transform.x * jumpSpeed;
+
+        if (_settings.enableSound)
+        {
+            _jumpSound.Play();
+        }
     }
 
     public void Die()
@@ -67,6 +87,11 @@ public class Jumper : Area2D
         // _target.GetNode<Node2D>("Pivot").Rotation = (Position - _target.Position).Angle();
         velocity = Vector2.Zero;
         EmitSignal(nameof(OnCapture), _target);
+
+        if (_settings.enableSound)
+        {
+            _captureSound.Play();
+        }
     }
 
     public void ScreenExit()

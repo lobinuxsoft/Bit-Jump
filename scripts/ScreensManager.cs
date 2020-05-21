@@ -6,12 +6,24 @@ public class ScreensManager : Node
 {
 	[Signal] public delegate void OnStartGame();
 	
-	private BaseScreen currentScreen = null;
+	private BaseScreen _currentScreen = null;
+
+	private Settings _settings;
+
+	private AudioStreamPlayer _audioStreamPlayer;
+
+	private TextureButton musicButton;
+	[Export] private Dictionary<bool, Texture> musicTexture;
+	private TextureButton soundFXButton;
+	[Export] private Dictionary<bool, Texture> soundTexture;
 
 	public override void _Ready()
 	{
 		RegisterButtons();
 		ChangeScreen(GetNode<BaseScreen>("TitleScreen"));
+
+		_settings = GetTree().Root.GetNode<Settings>("Settings");
+		_audioStreamPlayer = GetNode<AudioStreamPlayer>("Click");
 	}
 
 	private void RegisterButtons()
@@ -33,6 +45,14 @@ public class ScreensManager : Node
 					case "Settings":
 						but.Connect("pressed", this, nameof(ToSetting));
 						break;
+					case "Music":
+						musicButton = but;
+						musicButton.Connect("pressed", this, nameof(Music));
+						break;
+					case "SoundFX":
+						soundFXButton = but;
+						soundFXButton.Connect("pressed", this, nameof(SoundFX));
+						break;
 				}
 				// but.Connect("pressed", this, nameof(OnButtonPressed), new Array(but.Name));
 			}
@@ -42,6 +62,11 @@ public class ScreensManager : Node
 	public void ToHome()
 	{
 		ChangeScreen(GetNode<BaseScreen>("TitleScreen"));
+
+		if (_settings.enableSound)
+		{
+			_audioStreamPlayer.Play();
+		}
 	}
 
 	public async void ToPlay()
@@ -49,11 +74,43 @@ public class ScreensManager : Node
 		ChangeScreen(null);
 		await ToSignal(GetTree().CreateTimer(.5f), "timeout");
 		EmitSignal(nameof(OnStartGame));
+		
+		if (_settings.enableSound)
+		{
+			_audioStreamPlayer.Play();
+		}
 	}
 
 	public void ToSetting()
 	{
 		ChangeScreen(GetNode<BaseScreen>("SettingScreen"));
+		
+		if (_settings.enableSound)
+		{
+			_audioStreamPlayer.Play();
+		}
+	}
+
+	public void Music()
+	{
+		_settings.enableMusic = !_settings.enableMusic;
+		musicButton.TextureNormal = musicTexture[_settings.enableMusic];
+		
+		if (_settings.enableSound)
+		{
+			_audioStreamPlayer.Play();
+		}
+	}
+
+	public void SoundFX()
+	{
+		_settings.enableSound = !_settings.enableSound;
+		soundFXButton.TextureNormal = soundTexture[_settings.enableSound];
+		
+		if (_settings.enableSound)
+		{
+			_audioStreamPlayer.Play();
+		}
 	}
 	
 	// public void OnButtonPressed(string buttonName)
@@ -75,19 +132,19 @@ public class ScreensManager : Node
 
 	private async void ChangeScreen(BaseScreen screen)
 	{
-		if (currentScreen != null)
+		if (_currentScreen != null)
 		{
-			currentScreen.Hide();
-			await ToSignal(currentScreen.tween, "tween_completed");
+			_currentScreen.Hide();
+			await ToSignal(_currentScreen.tween, "tween_completed");
 			
 		}
 		
-		currentScreen = screen;
+		_currentScreen = screen;
 		
 		if (screen != null)
 		{
-			currentScreen.Show();
-			await ToSignal(currentScreen.tween, "tween_completed");
+			_currentScreen.Show();
+			await ToSignal(_currentScreen.tween, "tween_completed");
 		}
 	}
 

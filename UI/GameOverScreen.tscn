@@ -13,7 +13,7 @@ text = "Game Over"
 margin_bottom = 382.0
 custom_constants/separation = 50
 
-[node name="Return" type="TextureButton" parent="MarginContainer/VBoxContainer/Buttons" index="0" groups=[
+[node name="Home" type="TextureButton" parent="MarginContainer/VBoxContainer/Buttons" index="0" groups=[
 "buttons",
 ]]
 margin_left = 155.0

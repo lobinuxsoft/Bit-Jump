@@ -6,6 +6,7 @@ public class Main : Node
     [Export] private readonly NodePath _startPositionNode = "";
     [Export] private readonly NodePath _screenManagerNode = "";
     [Export] private readonly NodePath _hudNode = "";
+    [Export] private readonly NodePath _musicNode = "";
     
     private PackedScene _circle = ResourceLoader.Load<PackedScene>("res://objects/Circle.tscn");
     private PackedScene _jumper = ResourceLoader.Load<PackedScene>("res://objects/Jumper.tscn");
@@ -19,8 +20,14 @@ public class Main : Node
     private ScreensManager _screensManager;
     private HUD _hud;
 
+    private Settings _settings;
+    private AudioStreamPlayer _audioStreamPlayer;
+
     public override void _Ready()
     {
+        _settings = GetTree().Root.GetNode<Settings>("Settings");
+        _audioStreamPlayer = GetNode<AudioStreamPlayer>(_musicNode);
+        
         _camera = GetNode<Camera2D>(_cameraNode);
         _startPos = GetNode<Position2D>(_startPositionNode);
         _screensManager = GetNode<ScreensManager>(_screenManagerNode);
@@ -44,6 +51,11 @@ public class Main : Node
         SpawCircle(_startPos.Position);
         _hud.Show();
         _hud.ShowMessage($"GO!");
+
+        if (_settings.enableMusic)
+        {
+            _audioStreamPlayer.Play();
+        }
     }
 
     private void SpawCircle(Vector2 startPosPosition, bool randomize = false)
@@ -76,5 +88,10 @@ public class Main : Node
         GetTree().CallGroup("circles", "Implode");
         _screensManager.GameOver();
         _hud.Hide();
+        
+        if (_settings.enableMusic)
+        {
+            _audioStreamPlayer.Stop();
+        }
     }
 }

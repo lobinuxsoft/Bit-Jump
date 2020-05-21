@@ -71,7 +71,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 64, 600 ]
+"values": [ 64, 200 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Message:modulate")
@@ -124,7 +124,6 @@ custom_fonts/font = ExtResource( 1 )
 text = "100"
 
 [node name="Message" type="Label" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2

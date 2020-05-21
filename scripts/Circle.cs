@@ -21,10 +21,15 @@ public class Circle : Area2D
     private CollisionShape2D _collisionShape2D;
     private CircleShape2D _circleShape2D;
     private Sprite _sprite;
+    private Sprite _spriteEffect;
     private AnimationPlayer _animationPlayer;
     private float imgSize;
     private Label _label;
     private Jumper _jumper = null;
+
+    private Settings _settings;
+    private GameSkin _gameSkin;
+    private AudioStreamPlayer _audioStreamPlayer;
 
     public Position2D OrbitPosition => _orbitPosition;
 
@@ -37,8 +42,16 @@ public class Circle : Area2D
         _orbitPosition = GetNode<Position2D>("Pivot/OrbitPosition");
         _collisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
         _sprite = GetNode<Sprite>("Sprite");
+        _spriteEffect = GetNode<Sprite>("SpriteEffect");
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         _label = GetNode<Label>("Label");
+
+        _settings = GetTree().Root.GetNode<Settings>(nameof(Settings));
+        _gameSkin = SkinManager.instance.GameSkins[SkinManager.instance.skinSelected];
+        _gradient = _gameSkin.circleGradient;
+        
+        _audioStreamPlayer = GetNode<AudioStreamPlayer>("Beep");
+        
         SetMode(modes);
 
         _circleShape2D = (CircleShape2D)_collisionShape2D.Shape;
@@ -81,6 +94,13 @@ public class Circle : Area2D
         if (Mathf.Abs(_pivot.Rotation - _orbitStart) > 2 * Mathf.Pi)
         {
             _curCycle--;
+            
+            if (_settings.enableSound)
+            {
+                _audioStreamPlayer.Play();
+                
+            }
+            
             _sprite.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
             _label.Text = $"{_curCycle}";
             if (_curCycle <= 0)
@@ -98,6 +118,11 @@ public class Circle : Area2D
     private void SetMode(MODES mode)
     {
         _mode = mode;
+        _curCycle = _maxCycle;
+        
+        _sprite.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
+        _spriteEffect.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
+        
 
         switch (mode)
         {
@@ -105,7 +130,6 @@ public class Circle : Area2D
                 _label.Hide();
                 break;
             case MODES.LIMITED:
-                _curCycle = _maxCycle;
                 _label.Text = $"{_curCycle}";
                 _label.Show();
                 break;
