@@ -64,6 +64,7 @@
     <Compile Include="scripts\Settings.cs" />
     <Compile Include="scripts\SkinManager.cs" />
     <Compile Include="scripts\Version.cs" />
+    <Compile Include="tests\ProgressionTester.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

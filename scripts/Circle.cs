@@ -6,13 +6,13 @@ public class Circle : Area2D
 {
     public enum MODES
     {
-        STATIC,
-        LIMITED
+        STATIC = 0,
+        LIMITED = 1
     }
 
     [Export] private Gradient _gradient;
     private MODES _mode = MODES.STATIC;
-    private float _moveRange = 100;
+    private float _moveRange = 0;
     private float _moveSpeed = 1;
     private int _maxCycle = 3;
     private int _curCycle = 0;
@@ -36,11 +36,26 @@ public class Circle : Area2D
 
     public Position2D OrbitPosition => _orbitPosition;
 
-    public void Init(Vector2 position, float radius = 100, MODES modes = MODES.LIMITED)
+    public void Init(Vector2 position, int level = 1)
     {
+        int mode = Settings.instance.RandWeighted(new[] {10, level - 1});
         Position = position;
-        _radius = radius;
         
+        float moveChance = Mathf.Clamp((float)level - 10f, 0f, 9f) / 10f;
+        
+        if (GD.Randf() < moveChance)
+        {
+            _moveRange = Mathf.Max(25, 100 * (float)GD.RandRange(.75f, 1.25f) * moveChance) * Mathf.Pow(-1, GD.Randi() % 2);
+            _moveSpeed = Mathf.Max(2.5f - Mathf.Ceil((float)level / 5) * .25f, .75f);
+        }
+
+        float smallChance = Mathf.Min(.9f, Mathf.Max(0f, ((float)level - 10f) / 20f));
+        
+        if (GD.Randf() < smallChance)
+        {
+            _radius = Mathf.Max(50f, _radius - (float)level * (float) GD.RandRange(.75f, 1.25f));
+        }
+
         _pivot = GetNode<Node2D>("Pivot");
         _orbitPosition = GetNode<Position2D>("Pivot/OrbitPosition");
         _collisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
@@ -54,7 +69,7 @@ public class Circle : Area2D
         _audioStreamPlayer = GetNode<AudioStreamPlayer>("Beep");
         _moveTween = GetNode<Tween>("MoveTween");
         
-        SetMode(modes);
+        SetMode((MODES)mode);
 
         _circleShape2D = (CircleShape2D)_collisionShape2D.Shape;
         _circleShape2D.Radius = _radius;

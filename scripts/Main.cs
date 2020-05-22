@@ -86,7 +86,7 @@ public class Main : Node
         }
         
         AddChild(c);
-        c.Init(startPosPosition);
+        c.Init(startPosPosition, level);
     }
 
     public void OnJumperCapture(Circle circle)
