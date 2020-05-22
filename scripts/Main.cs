@@ -13,6 +13,7 @@ public class Main : Node
 
     private Jumper _player = null;
     private int _score = 0;
+    private int _highScore = 0;
     private int level = 0;
 
     public int Score
@@ -21,6 +22,7 @@ public class Main : Node
         set
         {
             _score = value;
+            _highScore = (_score > _highScore) ? _score : _highScore;
             _hud.UpdateScore($"{_score}");
             if (_score > 0 && _score % Settings.instance.circlesPerLevel == 0)
             {
@@ -40,6 +42,7 @@ public class Main : Node
 
     public override void _Ready()
     {
+        LoadScore();
         _audioStreamPlayer = GetNode<AudioStreamPlayer>(_musicNode);
         
         _camera = GetNode<Camera2D>(_cameraNode);
@@ -100,12 +103,33 @@ public class Main : Node
     public void OnJumperDie()
     {
         GetTree().CallGroup("circles", "Implode");
-        _screensManager.GameOver();
+        _screensManager.GameOver(_score, _highScore, level);
         _hud.Hide();
         
         if (Settings.instance.enableMusic)
         {
             _audioStreamPlayer.Stop();
+        }
+
+        SaveScore();
+    }
+
+    private void SaveScore()
+    {
+        var file = new File();
+        file.Open(Settings.instance.scoreFile, File.ModeFlags.Write);
+        file.StoreVar(_highScore);
+        file.Close();
+    }
+    
+    private void LoadScore()
+    {
+        var file = new File();
+        if (file.FileExists(Settings.instance.scoreFile))
+        {
+            file.Open(Settings.instance.scoreFile, File.ModeFlags.Read);
+            _highScore = (int)file.GetVar();
+            file.Close();
         }
     }
 }

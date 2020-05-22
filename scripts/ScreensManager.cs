@@ -15,10 +15,18 @@ public class ScreensManager : Node
 	private TextureButton soundFXButton;
 	[Export] private Dictionary<bool, Texture> soundTexture;
 
+	private Label scoreLabel;
+	private Label highScoreLabel;
+	private Label levelLabel;
+
 	public override void _Ready()
 	{
 		RegisterButtons();
 		ChangeScreen(GetNode<BaseScreen>("TitleScreen"));
+
+		scoreLabel = GetNode<Label>("GameOverScreen/MarginContainer/VBoxContainer/Score");
+		highScoreLabel = GetNode<Label>("GameOverScreen/MarginContainer/VBoxContainer/HighScore");
+		levelLabel = GetNode<Label>("GameOverScreen/MarginContainer/VBoxContainer/FarLevel");
 		
 		_audioStreamPlayer = GetNode<AudioStreamPlayer>("Click");
 	}
@@ -145,8 +153,11 @@ public class ScreensManager : Node
 		}
 	}
 
-	public void GameOver()
+	public void GameOver(int score, int highScore, int level)
 	{
+		scoreLabel.Text = $"Score: {score}";
+		highScoreLabel.Text = $"Best: {highScore}";
+		levelLabel.Text = $"Best Level: {level}";
 		ChangeScreen(GetNode<BaseScreen>("GameOverScreen"));
 	}
 }

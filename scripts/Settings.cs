@@ -3,7 +3,8 @@ using Godot;
 public class Settings : Node
 {
     public static Settings instance;
-    
+
+    public string scoreFile = "user://highscore.save";
     public bool enableSound = true;
     public bool enableMusic = true;
 

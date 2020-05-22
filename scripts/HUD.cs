@@ -14,6 +14,8 @@ public class HUD : CanvasLayer
         _scoreLabel = GetNode<Label>("ScoreBox/HBoxContainer/Score");
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         _scoreBox = GetNode<MarginContainer>("ScoreBox");
+
+        _messageLabel.RectPivotOffset = _messageLabel.RectSize / 2;
     }
 
     public void ShowMessage(string message)
