@@ -13,19 +13,33 @@ public class Main : Node
 
     private Jumper _player = null;
     private int _score = 0;
+    private int level = 0;
+
+    public int Score
+    {
+        get => _score;
+        set
+        {
+            _score = value;
+            _hud.UpdateScore($"{_score}");
+            if (_score > 0 && _score % Settings.instance.circlesPerLevel == 0)
+            {
+                level++;
+                _hud.ShowMessage($"Level {level}");
+            }
+        }
+    }
 
     private Camera2D _camera;
     private Position2D _startPos;
 
     private ScreensManager _screensManager;
     private HUD _hud;
-
-    private Settings _settings;
+    
     private AudioStreamPlayer _audioStreamPlayer;
 
     public override void _Ready()
     {
-        _settings = GetTree().Root.GetNode<Settings>("Settings");
         _audioStreamPlayer = GetNode<AudioStreamPlayer>(_musicNode);
         
         _camera = GetNode<Camera2D>(_cameraNode);
@@ -40,8 +54,9 @@ public class Main : Node
 
     private void NewGame()
     {
-        _score = 0;
-        _hud.UpdateScore($"{_score}");
+        Score = 0;
+        level = 1;
+        
         _camera.Position = _startPos.Position;
         _player = (Jumper) _jumper.Instance();
         _player.Position = _startPos.Position;
@@ -52,7 +67,7 @@ public class Main : Node
         _hud.Show();
         _hud.ShowMessage($"GO!");
 
-        if (_settings.enableMusic)
+        if (Settings.instance.enableMusic)
         {
             _audioStreamPlayer.Play();
         }
@@ -79,8 +94,7 @@ public class Main : Node
         _camera.Position = circle.Position;
         circle.Capture(_player);
         CallDeferred(nameof(SpawCircle), circle.Position, true);
-        _score++;
-        _hud.UpdateScore($"{_score}");
+        Score += 1;
     }
 
     public void OnJumperDie()
@@ -89,7 +103,7 @@ public class Main : Node
         _screensManager.GameOver();
         _hud.Hide();
         
-        if (_settings.enableMusic)
+        if (Settings.instance.enableMusic)
         {
             _audioStreamPlayer.Stop();
         }

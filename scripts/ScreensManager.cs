@@ -8,8 +8,6 @@ public class ScreensManager : Node
 	
 	private BaseScreen _currentScreen = null;
 
-	private Settings _settings;
-
 	private AudioStreamPlayer _audioStreamPlayer;
 
 	private TextureButton musicButton;
@@ -21,8 +19,7 @@ public class ScreensManager : Node
 	{
 		RegisterButtons();
 		ChangeScreen(GetNode<BaseScreen>("TitleScreen"));
-
-		_settings = GetTree().Root.GetNode<Settings>("Settings");
+		
 		_audioStreamPlayer = GetNode<AudioStreamPlayer>("Click");
 	}
 
@@ -63,7 +60,7 @@ public class ScreensManager : Node
 	{
 		ChangeScreen(GetNode<BaseScreen>("TitleScreen"));
 
-		if (_settings.enableSound)
+		if (Settings.instance.enableSound)
 		{
 			_audioStreamPlayer.Play();
 		}
@@ -75,7 +72,7 @@ public class ScreensManager : Node
 		await ToSignal(GetTree().CreateTimer(.5f), "timeout");
 		EmitSignal(nameof(OnStartGame));
 		
-		if (_settings.enableSound)
+		if (Settings.instance.enableSound)
 		{
 			_audioStreamPlayer.Play();
 		}
@@ -85,7 +82,7 @@ public class ScreensManager : Node
 	{
 		ChangeScreen(GetNode<BaseScreen>("SettingScreen"));
 		
-		if (_settings.enableSound)
+		if (Settings.instance.enableSound)
 		{
 			_audioStreamPlayer.Play();
 		}
@@ -93,10 +90,10 @@ public class ScreensManager : Node
 
 	public void Music()
 	{
-		_settings.enableMusic = !_settings.enableMusic;
-		musicButton.TextureNormal = musicTexture[_settings.enableMusic];
+		Settings.instance.enableMusic = !Settings.instance.enableMusic;
+		musicButton.TextureNormal = musicTexture[Settings.instance.enableMusic];
 		
-		if (_settings.enableSound)
+		if (Settings.instance.enableSound)
 		{
 			_audioStreamPlayer.Play();
 		}
@@ -104,10 +101,10 @@ public class ScreensManager : Node
 
 	public void SoundFX()
 	{
-		_settings.enableSound = !_settings.enableSound;
-		soundFXButton.TextureNormal = soundTexture[_settings.enableSound];
+		Settings.instance.enableSound = !Settings.instance.enableSound;
+		soundFXButton.TextureNormal = soundTexture[Settings.instance.enableSound];
 		
-		if (_settings.enableSound)
+		if (Settings.instance.enableSound)
 		{
 			_audioStreamPlayer.Play();
 		}

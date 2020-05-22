@@ -32,7 +32,7 @@ polygon = PoolVector2Array( 21, 0, -21, -21, -21, 21 )
 
 [node name="Points" type="Line2D" parent="Trail"]
 z_index = -1
-width = 25.0
+width = 15.0
 default_color = Color( 0.4, 0.501961, 1, 1 )
 gradient = SubResource( 2 )
 joint_mode = 2

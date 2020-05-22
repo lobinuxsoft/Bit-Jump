@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Object = Godot.Object;
 
 public class Circle : Area2D
 {
@@ -11,6 +12,8 @@ public class Circle : Area2D
 
     [Export] private Gradient _gradient;
     private MODES _mode = MODES.STATIC;
+    private float _moveRange = 100;
+    private float _moveSpeed = 1;
     private int _maxCycle = 3;
     private int _curCycle = 0;
     private float _orbitStart;
@@ -26,10 +29,10 @@ public class Circle : Area2D
     private float imgSize;
     private Label _label;
     private Jumper _jumper = null;
-
-    private Settings _settings;
+    
     private GameSkin _gameSkin;
     private AudioStreamPlayer _audioStreamPlayer;
+    private Tween _moveTween;
 
     public Position2D OrbitPosition => _orbitPosition;
 
@@ -45,12 +48,11 @@ public class Circle : Area2D
         _spriteEffect = GetNode<Sprite>("SpriteEffect");
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         _label = GetNode<Label>("Label");
-
-        _settings = GetTree().Root.GetNode<Settings>(nameof(Settings));
-        _gameSkin = SkinManager.instance.GameSkins[SkinManager.instance.skinSelected];
-        _gradient = _gameSkin.circleGradient;
         
+        _gameSkin = SkinManager.instance.GameSkins[SkinManager.instance.skinSelected];
+
         _audioStreamPlayer = GetNode<AudioStreamPlayer>("Beep");
+        _moveTween = GetNode<Tween>("MoveTween");
         
         SetMode(modes);
 
@@ -63,6 +65,8 @@ public class Circle : Area2D
         _orbitPosition.Position = new Vector2(_radius + 25, 0);
 
         _rotationSpeed *= Mathf.Pow(-1, GD.Randi() % 2);
+        
+        SetTween();
     }
 
     public async void Implode()
@@ -95,7 +99,7 @@ public class Circle : Area2D
         {
             _curCycle--;
             
-            if (_settings.enableSound)
+            if (Settings.instance.enableSound)
             {
                 _audioStreamPlayer.Play();
                 
@@ -120,20 +124,34 @@ public class Circle : Area2D
         _mode = mode;
         _curCycle = _maxCycle;
         
-        _sprite.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
-        _spriteEffect.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
-        
 
         switch (mode)
         {
             case MODES.STATIC:
+                _gradient = _gameSkin.circleGradient;
                 _label.Hide();
                 break;
             case MODES.LIMITED:
                 _label.Text = $"{_curCycle}";
+                _gradient = _gameSkin.timerCircleGradient;
                 _label.Show();
                 break;
         }
+        
+        _sprite.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
+        _spriteEffect.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
+    }
+
+    public void SetTween(Object obj = null, NodePath key = null)
+    {
+        if(_moveRange == 0) return;
+
+        _moveRange *= -1;
+
+        _moveTween.InterpolateProperty(this, "position:x", Position.x, Position.x + _moveRange, _moveSpeed,
+            Tween.TransitionType.Quad, Tween.EaseType.InOut);
+
+        _moveTween.Start();
     }
 }
 

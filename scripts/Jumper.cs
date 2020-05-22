@@ -10,8 +10,7 @@ public class Jumper : Area2D
     private Line2D _trail;
     
     private Circle _target = null;
-
-    private Settings _settings;
+    
     private AudioStreamPlayer _jumpSound;
     private AudioStreamPlayer _captureSound;
 
@@ -26,8 +25,7 @@ public class Jumper : Area2D
     {
         Connect("area_entered", this, nameof(OnAreaEnter));
         _trail = GetNode<Line2D>("Trail/Points");
-
-        _settings = GetTree().Root.GetNode<Settings>(nameof(Settings));
+        
         _jumpSound = GetNode<AudioStreamPlayer>("Jump");
         _captureSound = GetNode<AudioStreamPlayer>("Capture");
 
@@ -69,7 +67,7 @@ public class Jumper : Area2D
         _target = null;
         velocity = Transform.x * jumpSpeed;
 
-        if (_settings.enableSound)
+        if (Settings.instance.enableSound)
         {
             _jumpSound.Play();
         }
@@ -88,7 +86,7 @@ public class Jumper : Area2D
         velocity = Vector2.Zero;
         EmitSignal(nameof(OnCapture), _target);
 
-        if (_settings.enableSound)
+        if (Settings.instance.enableSound)
         {
             _captureSound.Play();
         }
