@@ -12,3 +12,7 @@ export_presets.cfg
 
 # Builds
 *.apk
+
+android/build/.gradle/
+
+android/build/build/
