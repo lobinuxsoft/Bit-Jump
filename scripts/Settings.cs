@@ -10,9 +10,26 @@ public class Settings : Node
 
     public int circlesPerLevel = 5;
 
+    public Object Firebase;
+
     public override void _Ready()
     {
         instance = this;
+
+        if (Engine.HasSingleton("Firebase"))
+        {
+            Firebase = Engine.GetSingleton("Firebase");
+            if (Firebase != null)
+            {
+                Firebase.Call("init", GetInstanceId());
+            }
+        }
+    }
+    
+    //Firebase implementation
+    public void _on_firebase_receive_message(string tag, string from, object key, object data)
+    {
+        GD.Print($"TAG: {tag} || From: {from} || Key: {key} || Data: {data}");
     }
 
     public int RandWeighted(int[] weights)
