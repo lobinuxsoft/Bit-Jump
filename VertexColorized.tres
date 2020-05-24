@@ -1,0 +1,43 @@
+[gd_resource type="VisualShader" load_steps=3 format=2]
+
+[sub_resource type="VisualShaderNodeInput" id=10]
+input_name = "color"
+
+[sub_resource type="VisualShaderNodeInput" id=9]
+input_name = "color"
+
+[resource]
+code = "shader_type spatial;
+
+
+
+void vertex() {
+// Input:2
+	vec3 n_out2p0 = COLOR.rgb;
+
+// Output:0
+	COLOR.rgb = n_out2p0;
+
+}
+
+void fragment() {
+// Input:2
+	vec3 n_out2p0 = COLOR.rgb;
+
+// Output:0
+	EMISSION = n_out2p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( -573, 129 )
+nodes/vertex/2/node = SubResource( 9 )
+nodes/vertex/2/position = Vector2( -100, 280 )
+nodes/vertex/connections = PoolIntArray( 2, 0, 0, 6 )
+nodes/fragment/2/node = SubResource( 10 )
+nodes/fragment/2/position = Vector2( -120, 258 )
+nodes/fragment/connections = PoolIntArray( 2, 0, 0, 5 )
