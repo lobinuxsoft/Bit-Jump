@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 public class AudioAnalyzer : Node
 {
-    public static AudioAnalyzer instance;
+    public static AudioAnalyzer Instance;
     [Export] private int _audioBusIndex = 0;
     [Export] private int _spectrumEffectIndex = 0;
-    [Export] private int decibelsDiference = -20;
+    [Export] private int _decibelsDiference = -20;
+    [Export] private float _smoothBands = 5;
 
-    [Export(PropertyHint.Range, "1, 64")] private int _bandAmount = 20;
+    [Export(PropertyHint.Range, "1, 256")] private int _busChannelsAmount = 64;
     
     private int _minFreq = 20;
     private int _maxFreq = 20000;
@@ -24,33 +25,33 @@ public class AudioAnalyzer : Node
 
     private float _accel = 5;
 
-    private List<float> _bands = new List<float>();
+    private List<float> _busChannels = new List<float>();
 
     private AudioEffectSpectrumAnalyzerInstance _spectrum;
 
     private bool _resetValues = false;
 
-    public List<float> Bands => _bands;
+    public List<float> BusChannels => _busChannels;
 
     public float Amplitud => _amplitud / _maxAmplitud;
 
     public override void _Ready()
     {
-        if (instance != null)
+        if (Instance != null)
         {
             this.QueueFree();
         }
         else
         {
-            instance = this;
+            Instance = this;
         }
         
         _spectrum = (AudioEffectSpectrumAnalyzerInstance) AudioServer.GetBusEffectInstance(_audioBusIndex, _spectrumEffectIndex);
-        _bands.Clear();
+        _busChannels.Clear();
 
-        for (int i = 0; i < _bandAmount; i++)
+        for (int i = 0; i < _busChannelsAmount; i++)
         {
-            _bands.Add(0);
+            _busChannels.Add(0);
         }
     }
 
@@ -59,16 +60,16 @@ public class AudioAnalyzer : Node
         if (AudioServer.GetBusPeakVolumeLeftDb(1, 0) > -200 || AudioServer.GetBusPeakVolumeRightDb(1, 0) > -200)
         {
             _resetValues = false;
-            var data = new VData{ delta = delta, bands = _bands};
+            var data = new VData{ delta = delta, bands = _busChannels};
             ThreadPool.QueueUserWorkItem(VisualizerProcess, data);
         }
         else
         {
             if (!_resetValues)
             {
-                for (int i = 0; i < _bands.Count; i++)
+                for (int i = 0; i < _busChannels.Count; i++)
                 {
-                    _bands[i] = 0;
+                    _busChannels[i] = 0;
                 }
 
                 _amplitud = 0;
@@ -81,14 +82,14 @@ public class AudioAnalyzer : Node
     {
         VData outBands = (VData)data;
         int freq = _minFreq;
-        var interval = (_maxFreq - _minFreq) / _bandAmount;
+        var interval = (_maxFreq - _minFreq) / _busChannelsAmount;
 
-        var minD = _minDb + decibelsDiference;
-        var maxD = _maxDb + decibelsDiference;
+        var minD = _minDb + _decibelsDiference;
+        var maxD = _maxDb + _decibelsDiference;
         
         _amplitud = 0;
 
-        for (int i = 0; i < _bandAmount; i++)
+        for (int i = 0; i < _busChannelsAmount; i++)
         {
             var freqLow = (float)(freq - _minFreq) / (_maxFreq - _minFreq);
             freqLow = freqLow * freqLow * freqLow * freqLow;
@@ -106,13 +107,14 @@ public class AudioAnalyzer : Node
 
             var result = (decibels - minD) / (maxD - minD);
 
-            result += .3f * (freq - _minFreq) / (_maxFreq - _minFreq);
+            result += .05f * (freq - _minFreq) / (_maxFreq - _minFreq);
 
             result = Mathf.Clamp(result, .005f, 1f);
 
             _amplitud += result;
             
-            outBands.bands[i] = Mathf.Lerp(outBands.bands[i], result, _accel * outBands.delta);
+            outBands.bands[i] = Mathf.Lerp(outBands.bands[i], result, _accel * outBands.delta * _smoothBands);
+            //outBands.bands[i] = result;
         }
 
         if (_amplitud > _maxAmplitud)

@@ -12,7 +12,7 @@ public class RingVisualizer : MultiMeshInstance
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        Multimesh.InstanceCount = AudioAnalyzer.instance.Bands.Count;
+        Multimesh.InstanceCount = AudioAnalyzer.Instance.BusChannels.Count;
     }
 
     public override void _Process(float delta)
@@ -28,13 +28,15 @@ public class RingVisualizer : MultiMeshInstance
             
             var pos = Transform.origin + spawnDir * radius;
             
-            var t = Transform.Translated(pos);
+            var t = new Transform(Quat.Identity, pos);
             
-            Vector3 scale = minScale.LinearInterpolate(maxScale, AudioAnalyzer.instance.Bands[i]);
+            Vector3 scale = minScale.LinearInterpolate(maxScale, AudioAnalyzer.Instance.BusChannels[i]);
     
             t = t.Scaled(scale);
-            
-            Multimesh.SetInstanceColor(i, _gradient.Interpolate((float)i/Multimesh.InstanceCount));
+
+            Color color = _gradient.Interpolate((float) i / Multimesh.InstanceCount);
+
+            Multimesh.SetInstanceColor(i, Colors.Black.LinearInterpolate(color, AudioAnalyzer.Instance.BusChannels[i]));
             
             Multimesh.SetInstanceTransform(i, t);
         }

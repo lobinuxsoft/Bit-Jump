@@ -1,38 +1,39 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://objects/RingVisualizer.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/AudioRotator.cs" type="Script" id=2]
 [ext_resource path="res://VertexColorized.tres" type="Shader" id=3]
+[ext_resource path="res://scenes/NoiseFlowField.tscn" type="PackedScene" id=4]
 
-[sub_resource type="ShaderMaterial" id=7]
+[sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 3 )
 
-[sub_resource type="CylinderMesh" id=8]
-material = SubResource( 7 )
+[sub_resource type="CylinderMesh" id=2]
+material = SubResource( 1 )
 
-[sub_resource type="MultiMesh" id=9]
+[sub_resource type="MultiMesh" id=3]
 color_format = 2
 transform_format = 1
 instance_count = 1
-mesh = SubResource( 8 )
+mesh = SubResource( 2 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 color_array = PoolColorArray( 1, 1, 1, 1 )
 
-[sub_resource type="Gradient" id=1]
+[sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 0.945312, 0, 1, 1, 1, 0.470825, 0.00390625, 1 )
 
-[sub_resource type="CylinderMesh" id=6]
-material = SubResource( 7 )
+[sub_resource type="CylinderMesh" id=5]
+material = SubResource( 1 )
 
-[sub_resource type="MultiMesh" id=10]
+[sub_resource type="MultiMesh" id=6]
 color_format = 2
 transform_format = 1
 instance_count = 1
-mesh = SubResource( 6 )
+mesh = SubResource( 5 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 color_array = PoolColorArray( 1, 1, 1, 1 )
 
-[sub_resource type="Gradient" id=2]
+[sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 0, 1, 0.296875, 1, 0.00390625, 0.88327, 1, 1 )
 
 [node name="Visual Effects" type="CanvasLayer"]
@@ -64,9 +65,11 @@ far = 8192.0
 transform = Transform( 1, 0, 0, 0, 0.941964, -0.335715, 0, 0.335715, 0.941964, 0, 0, 0 )
 
 [node name="RingVisualizer" parent="ViewportContainer/Viewport/Pivot" instance=ExtResource( 1 )]
-multimesh = SubResource( 9 )
-_gradient = SubResource( 1 )
-radius = 50.0
+multimesh = SubResource( 3 )
+_gradient = SubResource( 4 )
+radius = 140.0
+minScale = Vector3( 1, 0.25, 1 )
+maxScale = Vector3( 1, 50, 1 )
 
 [node name="AudioRotator" type="Node" parent="ViewportContainer/Viewport/Pivot"]
 script = ExtResource( 2 )
@@ -80,9 +83,11 @@ _maxRotSpeed = 1.0
 transform = Transform( 1, 0, 0, 0, 0.941964, -0.335715, 0, 0.335715, 0.941964, 0, 0, 0 )
 
 [node name="RingVisualizer" parent="ViewportContainer/Viewport/Pivot2" instance=ExtResource( 1 )]
-multimesh = SubResource( 10 )
-_gradient = SubResource( 2 )
-radius = 75.0
+multimesh = SubResource( 6 )
+_gradient = SubResource( 7 )
+radius = 150.0
+minScale = Vector3( 1, 0.25, 1 )
+maxScale = Vector3( 1, 50, 1 )
 
 [node name="AudioRotator" type="Node" parent="ViewportContainer/Viewport/Pivot2"]
 script = ExtResource( 2 )
@@ -91,3 +96,6 @@ _nodeToRotate = NodePath("..")
 _axisToRotate = Vector3( -1, 1, -1 )
 _minRotSpeed = 0.1
 _maxRotSpeed = 0.5
+
+[node name="NoiseFlowField" parent="ViewportContainer/Viewport" instance=ExtResource( 4 )]
+transform = Transform( 0.604446, 0, -0.796646, 0, 1, 0, 0.796646, 0, 0.604446, 0, 0, 0 )

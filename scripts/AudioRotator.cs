@@ -17,7 +17,7 @@ public class AudioRotator : Node
         _spatial = GetNode<Spatial>(_nodeToRotate);
         
         GD.Randomize();
-        _busChannel = (int) GD.RandRange(0, AudioAnalyzer.instance.Bands.Count);
+        _busChannel = (int) GD.RandRange(0, AudioAnalyzer.Instance.BusChannels.Count);
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,9 +26,9 @@ public class AudioRotator : Node
       if (_spatial != null)
       {
           if(useBusChannel)
-            _spatial.Rotate(_axisToRotate.Normalized(), Mathf.Lerp(_minRotSpeed, _maxRotSpeed, AudioAnalyzer.instance.Bands[_busChannel]) * delta);
+            _spatial.Rotate(_axisToRotate.Normalized(), Mathf.Lerp(_minRotSpeed, _maxRotSpeed, AudioAnalyzer.Instance.BusChannels[_busChannel]) * delta);
           else
-            _spatial.Rotate(_axisToRotate.Normalized(), Mathf.Lerp(_minRotSpeed, _maxRotSpeed, AudioAnalyzer.instance.Amplitud) * delta);
+            _spatial.Rotate(_axisToRotate.Normalized(), Mathf.Lerp(_minRotSpeed, _maxRotSpeed, AudioAnalyzer.Instance.Amplitud) * delta);
       }
   }
 }

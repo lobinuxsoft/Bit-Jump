@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Synapsis_-_04_-_Wonderland.wav-999e2e127ea8dadf18c7abd59b1445d2.sample"
+
+[deps]
+
+source_file="res://objects/Synapsis_-_04_-_Wonderland.wav"
+dest_files=[ "res://.import/Synapsis_-_04_-_Wonderland.wav-999e2e127ea8dadf18c7abd59b1445d2.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -99,9 +99,11 @@ public class Circle : Area2D
         _orbitStart = _pivot.Rotation;
     }
 
-    public override void _Process(float delta) 
-    { 
-        _pivot.Rotation += _rotationSpeed * delta;
+    public override void _Process(float delta)
+    {
+        _pivot.Rotation += _rotationSpeed * (delta * Mathf.Lerp(1f, 2f, AudioAnalyzer.Instance.Amplitud));
+        _sprite.Modulate = _gradient.Interpolate(AudioAnalyzer.Instance.Amplitud);
+        
         if (_mode == MODES.LIMITED && _jumper != null)
         {
             CheckOrbit();
@@ -120,7 +122,8 @@ public class Circle : Area2D
                 
             }
             
-            _sprite.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
+            //_sprite.Modulate = _gradient.Interpolate((float) _curCycle / _maxCycle);
+            
             _label.Text = $"{_curCycle}";
             if (_curCycle <= 0)
             {

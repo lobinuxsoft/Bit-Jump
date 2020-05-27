@@ -3,7 +3,7 @@
 [ext_resource path="res://scripts/Main.cs" type="Script" id=1]
 [ext_resource path="res://UI/ScreensManager.tscn" type="PackedScene" id=2]
 [ext_resource path="res://UI/HUD.tscn" type="PackedScene" id=3]
-[ext_resource path="res://assets/audio/Music_Light-Puzzles.ogg" type="AudioStream" id=4]
+[ext_resource path="res://assets/audio/Synapsis_-_04_-_Wonderland.wav" type="AudioStream" id=4]
 [ext_resource path="res://assets/images/buttons/audioOn.png" type="Texture" id=5]
 [ext_resource path="res://assets/images/buttons/musicOff.png" type="Texture" id=6]
 [ext_resource path="res://assets/images/buttons/musicOn.png" type="Texture" id=7]
@@ -12,8 +12,6 @@
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
-ambient_light_energy = 0.0
-ambient_light_sky_contribution = 0.0
 fog_depth_enabled = false
 fog_transmit_enabled = true
 fog_height_enabled = true
