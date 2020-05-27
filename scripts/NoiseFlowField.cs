@@ -1,20 +1,20 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 public class NoiseFlowField : MultiMeshInstance
 {
     [Export] private Gradient _gradient;
     [Export] private Vector3 _gridSize = Vector3.One;
-    [Export] private float _increment;
-    [Export] private Vector3 _offset, _offsetSpeed;
 
-    [Export] private OpenSimplexNoise _simplexNoise;
-
-    List<FlowData> _flowDatas = new List<FlowData>();
+    private bool processThread = false;
 
     public override void _Ready()
     {
+        Settings.instance.OnGameStart += ActivateEffect;
+        Settings.instance.OnGameOver += DeactivateEffect;
+        
         Multimesh.InstanceCount = AudioAnalyzer.Instance.BusChannels.Count;
         InitInstances();
     }
@@ -31,46 +31,46 @@ public class NoiseFlowField : MultiMeshInstance
     
     public override void _Process(float delta)
     {
-        for (int i = 0; i < Multimesh.InstanceCount; i++)
+        if (!processThread) return;
+        
+        var data = new MultimeshData {multiMesh = Multimesh};
+        ThreadPool.QueueUserWorkItem(RhythmCalculation, data);
+    }
+
+    void RhythmCalculation(object multiMesh)
+    {
+        var m = (MultimeshData) multiMesh;
+        for (int i = 0; i < m.multiMesh.InstanceCount; i++)
         {
-            var t = Multimesh.GetInstanceTransform(i);
-            t.Scaled(Vector3.Zero.LinearInterpolate(Vector3.One * 100, AudioAnalyzer.Instance.BusChannels[i]));
+            var t = m.multiMesh.GetInstanceTransform(i);
+            t.basis = new Basis(Vector3.Left * AudioAnalyzer.Instance.BusChannels[i] * 5, Vector3.Up * AudioAnalyzer.Instance.BusChannels[i] * 5, Vector3.Forward * AudioAnalyzer.Instance.BusChannels[i] * 5);
             
-            Multimesh.SetInstanceTransform(i, t);
+            m.multiMesh.SetInstanceTransform(i, t);
             
-            Multimesh.SetInstanceColor(i, Colors.Black.LinearInterpolate(_gradient.Interpolate((float) i / Multimesh.InstanceCount), AudioAnalyzer.Instance.BusChannels[i]));
+            m.multiMesh.SetInstanceColor(i, Colors.Black.LinearInterpolate(_gradient.Interpolate((float) i / m.multiMesh.InstanceCount), AudioAnalyzer.Instance.BusChannels[i]));
         }
     }
 
-    void CalCulateFlowFieldDirections()
+    public override void _ExitTree()
     {
-        float xOff = 0f;
-        for (int x = 0; x < _gridSize.x; x++)
-        {
-            float yOff = 0f;
-            for (int y = 0; y < _gridSize.y; y++)
-            {
-                float zOff = 0f;
-                for (int z = 0; z < _gridSize.z; z++)
-                {
-                    float noise = _simplexNoise.GetNoise3d(xOff + _offset.x, yOff + _offset.y, zOff + _offset.z) + 1;
-                    Vector3 noiseDir = new Vector3(Mathf.Cos(noise * Mathf.Pi), Mathf.Sin(noise * Mathf.Pi), Mathf.Cos(noise * Mathf.Pi));
-                    
-                    _flowDatas.Add(new FlowData{direction = noiseDir.Normalized()});
-                    
-                    Vector3 pos = new Vector3(x, y, z);
-                    Vector3 endPos = pos + noiseDir.Normalized();
-                    
-                    zOff += _increment;
-                }
-                yOff += _increment;
-            }
-            xOff += _increment;
-        }
+        Settings.instance.OnGameStart -= ActivateEffect;
+        Settings.instance.OnGameOver -= DeactivateEffect;
+    }
+
+    private void ActivateEffect()
+    {
+        Visible = true;
+        processThread = true;
+    }
+
+    private void DeactivateEffect()
+    {
+        processThread = false;
+        Visible = false;
     }
 }
 
-public struct FlowData
+public struct MultimeshData
 {
-    public Vector3 direction;
+    public MultiMesh multiMesh;
 }

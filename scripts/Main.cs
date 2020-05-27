@@ -2,6 +2,8 @@ using Godot;
 
 public class Main : Node
 {
+    public static Main Instace;
+    
     [Export] private readonly NodePath _cameraNode = "";
     [Export] private readonly NodePath _startPositionNode = "";
     [Export] private readonly NodePath _screenManagerNode = "";
@@ -42,6 +44,18 @@ public class Main : Node
 
     public override void _Ready()
     {
+        if (Instace == null)
+        {
+            Instace = this;
+        }
+        else
+        {
+            if (Instace != this)
+            {
+                QueueFree();
+            }
+        }
+        
         LoadScore();
         _audioStreamPlayer = GetNode<AudioStreamPlayer>(_musicNode);
         
@@ -74,6 +88,8 @@ public class Main : Node
         {
             _audioStreamPlayer.Play();
         }
+        
+        Settings.instance.GameStart();
     }
 
     private void SpawCircle(Vector2 startPosPosition, bool randomize = false)
@@ -112,6 +128,8 @@ public class Main : Node
         }
 
         SaveScore();
+        
+        Settings.instance.GameOver();
     }
 
     private void SaveScore()

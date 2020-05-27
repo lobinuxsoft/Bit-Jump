@@ -11,6 +11,9 @@ public class Settings : Node
     public int circlesPerLevel = 5;
 
     public Object Firebase;
+    
+    public event GameEvent OnGameStart;
+    public event GameEvent OnGameOver;
 
     public override void _Ready()
     {
@@ -58,4 +61,16 @@ public class Settings : Node
 
         return result;
     }
+
+    public void GameStart()
+    {
+        OnGameStart?.Invoke();
+    }
+
+    public void GameOver()
+    {
+        OnGameOver?.Invoke();
+    }
 }
+
+public delegate void GameEvent();
