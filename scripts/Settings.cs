@@ -1,4 +1,7 @@
+using System;
+using System.Threading;
 using Godot;
+using Object = Godot.Object;
 
 public class Settings : Node
 {
@@ -74,3 +77,5 @@ public class Settings : Node
 }
 
 public delegate void GameEvent();
+
+public delegate void GameEvent<T>(T data);

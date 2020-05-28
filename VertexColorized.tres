@@ -1,10 +1,19 @@
-[gd_resource type="VisualShader" load_steps=3 format=2]
+[gd_resource type="VisualShader" load_steps=5 format=2]
 
 [sub_resource type="VisualShaderNodeInput" id=1]
 input_name = "color"
 
 [sub_resource type="VisualShaderNodeInput" id=2]
 input_name = "color"
+
+[sub_resource type="VisualShaderNodeExpression" id=3]
+size = Vector2( 557, 271 )
+expression = "vertex.xyz = vertex.xyz * INSTANCE_CUSTOM.xyz;
+
+VERTEX = vertex;"
+
+[sub_resource type="VisualShaderNodeInput" id=4]
+input_name = "vertex"
 
 [resource]
 code = "shader_type spatial;
@@ -14,10 +23,23 @@ render_mode specular_disabled, shadows_disabled, ambient_light_disabled;
 
 
 void vertex() {
+// Input:5
+	vec3 n_out5p0 = VERTEX;
+
+// Expression:4
+	vec3 n_out4p0;
+	n_out4p0 = vec3(0.0, 0.0, 0.0);
+	{
+		n_out5p0.xyz = n_out5p0.xyz * INSTANCE_CUSTOM.xyz;
+		
+		n_out4p0 = n_out5p0;
+	}
+
 // Input:2
 	vec3 n_out2p0 = COLOR.rgb;
 
 // Output:0
+	VERTEX = n_out4p0;
 	COLOR.rgb = n_out2p0;
 
 }
@@ -36,13 +58,23 @@ void light() {
 
 }
 "
-graph_offset = Vector2( -624, 137 )
+graph_offset = Vector2( -658, 21.0652 )
 modes/specular = 4
 flags/ambient_light_disabled = true
 flags/shadows_disabled = true
 nodes/vertex/2/node = SubResource( 2 )
-nodes/vertex/2/position = Vector2( 180, 280 )
-nodes/vertex/connections = PoolIntArray( 2, 0, 0, 6 )
+nodes/vertex/2/position = Vector2( 20, 400 )
+nodes/vertex/4/node = SubResource( 3 )
+nodes/vertex/4/position = Vector2( -400, 120 )
+nodes/vertex/4/size = Vector2( 557, 271 )
+nodes/vertex/4/input_ports = "0,1,vertex;"
+nodes/vertex/4/output_ports = "0,1,VERTEX;"
+nodes/vertex/4/expression = "vertex.xyz = vertex.xyz * INSTANCE_CUSTOM.xyz;
+
+VERTEX = vertex;"
+nodes/vertex/5/node = SubResource( 4 )
+nodes/vertex/5/position = Vector2( -620, 160 )
+nodes/vertex/connections = PoolIntArray( 2, 0, 0, 6, 4, 0, 0, 0, 5, 0, 4, 0 )
 nodes/fragment/2/node = SubResource( 1 )
 nodes/fragment/2/position = Vector2( 140, 260 )
 nodes/fragment/connections = PoolIntArray( 2, 0, 0, 5 )

@@ -3,19 +3,21 @@
 [ext_resource path="res://scripts/RingVisualizer.cs" type="Script" id=1]
 [ext_resource path="res://VertexColorized.tres" type="Shader" id=2]
 
-[sub_resource type="ShaderMaterial" id=7]
+[sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
 
-[sub_resource type="CylinderMesh" id=6]
-material = SubResource( 7 )
+[sub_resource type="CylinderMesh" id=2]
+material = SubResource( 1 )
 
 [sub_resource type="MultiMesh" id=3]
 color_format = 2
 transform_format = 1
+custom_data_format = 2
 instance_count = 1
-mesh = SubResource( 6 )
+mesh = SubResource( 2 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 color_array = PoolColorArray( 1, 1, 1, 1 )
+custom_data_array = PoolColorArray( 0, 0, 0, 0 )
 
 [sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 0.945312, 0, 1, 1, 1, 0.470825, 0.00390625, 1 )

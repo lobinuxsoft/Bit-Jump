@@ -64,4 +64,3 @@ bus = "Music"
 environment = SubResource( 1 )
 
 [node name="Visual Effects" parent="." instance=ExtResource( 9 )]
-[connection signal="OnStartGame" from="ScreensManager" to="." method="NewGame"]

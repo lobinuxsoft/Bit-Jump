@@ -11,9 +11,14 @@ public class AudioRotator : Node
 
     private Spatial _spatial;
     private int _busChannel = 0;
+
+    private bool _processEffect = false;
     
     public override void _Ready()
     {
+        Settings.instance.OnGameStart += ActivateProcess;
+        Settings.instance.OnGameOver += DeactivateProcess;
+        
         _spatial = GetNode<Spatial>(_nodeToRotate);
         
         GD.Randomize();
@@ -23,6 +28,8 @@ public class AudioRotator : Node
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
   public override void _Process(float delta)
   {
+      if(!_processEffect) return;
+      
       if (_spatial != null)
       {
           if(useBusChannel)
@@ -30,5 +37,21 @@ public class AudioRotator : Node
           else
             _spatial.Rotate(_axisToRotate.Normalized(), Mathf.Lerp(_minRotSpeed, _maxRotSpeed, AudioAnalyzer.Instance.Amplitud) * delta);
       }
+  }
+
+  public override void _ExitTree()
+  {
+      Settings.instance.OnGameStart += ActivateProcess;
+      Settings.instance.OnGameOver += DeactivateProcess;
+  }
+
+  private void ActivateProcess()
+  {
+      _processEffect = true;
+  }
+
+  private void DeactivateProcess()
+  {
+      _processEffect = false;
   }
 }

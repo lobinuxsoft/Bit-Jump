@@ -18,8 +18,9 @@ public class Jumper : Area2D
     
     public Circle Target => _target;
 
-    [Signal] public delegate void OnCapture(Circle circle);
-    [Signal] public delegate void OnDie();
+    //[Signal] public delegate void OnCapture(Circle circle);
+    public event GameEvent OnDie;
+    public event GameEvent<Circle> OnCapture; 
 
     public override void _Ready()
     {
@@ -82,10 +83,11 @@ public class Jumper : Area2D
     public void OnAreaEnter(Area2D area)
     {
         _target = (Circle)area;
-        // _target.GetNode<Node2D>("Pivot").Rotation = (Position - _target.Position).Angle();
         velocity = Vector2.Zero;
-        EmitSignal(nameof(OnCapture), _target);
+        //EmitSignal(nameof(OnCapture), _target);
 
+        OnCapture?.Invoke(_target);
+        
         if (Settings.instance.enableSound)
         {
             _captureSound.Play();
@@ -96,7 +98,7 @@ public class Jumper : Area2D
     {
         if (_target == null)
         {
-            EmitSignal(nameof(OnDie));
+            OnDie?.Invoke();
             Die();
         }
     }

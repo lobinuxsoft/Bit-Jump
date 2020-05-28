@@ -67,6 +67,8 @@ public class Main : Node
         _hud.Hide();
         
         GD.Randomize();
+
+        Settings.instance.OnGameStart += NewGame;
     }
 
     private void NewGame()
@@ -75,12 +77,17 @@ public class Main : Node
         level = 1;
         
         _camera.Position = _startPos.Position;
+        
         _player = (Jumper) _jumper.Instance();
         _player.Position = _startPos.Position;
+        
         AddChild(_player);
-        _player.Connect("OnCapture", this, nameof(OnJumperCapture));
-        _player.Connect("OnDie", this, nameof(OnJumperDie));
+        
+        _player.OnCapture += OnJumperCapture;
+        _player.OnDie += OnJumperDie;
+        
         SpawCircle(_startPos.Position);
+        
         _hud.Show();
         _hud.ShowMessage($"GO!");
 
@@ -88,8 +95,6 @@ public class Main : Node
         {
             _audioStreamPlayer.Play();
         }
-        
-        Settings.instance.GameStart();
     }
 
     private void SpawCircle(Vector2 startPosPosition, bool randomize = false)
@@ -149,5 +154,10 @@ public class Main : Node
             _highScore = (int)file.GetVar();
             file.Close();
         }
+    }
+
+    public override void _ExitTree()
+    {
+        Settings.instance.OnGameStart -= NewGame;
     }
 }

@@ -1,32 +1,30 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/NoiseFlowField.cs" type="Script" id=1]
 [ext_resource path="res://VertexColorized.tres" type="Shader" id=2]
 
-[sub_resource type="ShaderMaterial" id=5]
+[sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
 
-[sub_resource type="SphereMesh" id=6]
+[sub_resource type="SphereMesh" id=5]
 
-[sub_resource type="MultiMesh" id=7]
+[sub_resource type="MultiMesh" id=6]
 color_format = 2
 transform_format = 1
+custom_data_format = 2
 instance_count = 1
-mesh = SubResource( 6 )
+mesh = SubResource( 5 )
 transform_array = PoolVector3Array( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 color_array = PoolColorArray( 1, 1, 1, 1 )
+custom_data_array = PoolColorArray( 0, 0, 0, 0 )
 
 [sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 1, 0, 0.84375, 1, 0, 0.976562, 1, 1 )
 
-[sub_resource type="OpenSimplexNoise" id=3]
-
 [node name="NoiseFlowField" type="MultiMeshInstance"]
-material_override = SubResource( 5 )
-multimesh = SubResource( 7 )
+material_override = SubResource( 1 )
+cast_shadow = 0
+multimesh = SubResource( 6 )
 script = ExtResource( 1 )
 _gradient = SubResource( 4 )
 _gridSize = Vector3( 256, 256, 256 )
-_increment = 5.0
-_offset = Vector3( 10, 10, 10 )
-_simplexNoise = SubResource( 3 )

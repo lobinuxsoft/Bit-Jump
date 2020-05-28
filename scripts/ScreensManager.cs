@@ -4,8 +4,6 @@ using Godot.Collections;
 
 public class ScreensManager : Node
 {
-	[Signal] public delegate void OnStartGame();
-	
 	private BaseScreen _currentScreen = null;
 
 	private AudioStreamPlayer _audioStreamPlayer;
@@ -78,12 +76,13 @@ public class ScreensManager : Node
 	{
 		ChangeScreen(null);
 		await ToSignal(GetTree().CreateTimer(.5f), "timeout");
-		EmitSignal(nameof(OnStartGame));
-		
+
 		if (Settings.instance.enableSound)
 		{
 			_audioStreamPlayer.Play();
 		}
+		
+		Settings.instance.GameStart();
 	}
 
 	public void ToSetting()
@@ -117,23 +116,6 @@ public class ScreensManager : Node
 			_audioStreamPlayer.Play();
 		}
 	}
-	
-	// public void OnButtonPressed(string buttonName)
-	// {
-	// 	switch (buttonName)
-	// 	{
-	// 		case "Home":
-	// 			ChangeScreen(GetNode<BaseScreen>("TitleScreen"));
-	// 			break;
-	// 		case "Play":
-	// 			ChangeScreen(null);
-	// 			EmitSignal(nameof(OnStartGame));
-	// 			break;
-	// 		case "Settings":
-	// 			ChangeScreen(GetNode<BaseScreen>("SettingScreen"));
-	// 			break;
-	// 	}
-	// }
 
 	private async void ChangeScreen(BaseScreen screen)
 	{

@@ -33,21 +33,20 @@ public class NoiseFlowField : MultiMeshInstance
     {
         if (!processThread) return;
         
-        var data = new MultimeshData {multiMesh = Multimesh};
-        ThreadPool.QueueUserWorkItem(RhythmCalculation, data);
+        var data = new MultimeshDataStruct {MultiMesh = Multimesh};
+        ThreadPool.QueueUserWorkItem(ThreadProcess, data);
     }
 
-    void RhythmCalculation(object multiMesh)
+    void ThreadProcess(object multiMesh)
     {
-        var m = (MultimeshData) multiMesh;
-        for (int i = 0; i < m.multiMesh.InstanceCount; i++)
+        if(!processThread) return;
+        
+        var m = (MultimeshDataStruct) multiMesh;
+        for (int i = 0; i < m.MultiMesh.InstanceCount; i++)
         {
-            var t = m.multiMesh.GetInstanceTransform(i);
-            t.basis = new Basis(Vector3.Left * AudioAnalyzer.Instance.BusChannels[i] * 5, Vector3.Up * AudioAnalyzer.Instance.BusChannels[i] * 5, Vector3.Forward * AudioAnalyzer.Instance.BusChannels[i] * 5);
+            m.MultiMesh.SetInstanceCustomData(i, new Color(AudioAnalyzer.Instance.BusChannels[i] * 5f, AudioAnalyzer.Instance.BusChannels[i] * 5f, AudioAnalyzer.Instance.BusChannels[i] * 5f));
             
-            m.multiMesh.SetInstanceTransform(i, t);
-            
-            m.multiMesh.SetInstanceColor(i, Colors.Black.LinearInterpolate(_gradient.Interpolate((float) i / m.multiMesh.InstanceCount), AudioAnalyzer.Instance.BusChannels[i]));
+            m.MultiMesh.SetInstanceColor(i, Colors.Black.LinearInterpolate(_gradient.Interpolate((float) i / m.MultiMesh.InstanceCount), AudioAnalyzer.Instance.BusChannels[i]));
         }
     }
 
@@ -68,9 +67,4 @@ public class NoiseFlowField : MultiMeshInstance
         processThread = false;
         Visible = false;
     }
-}
-
-public struct MultimeshData
-{
-    public MultiMesh multiMesh;
 }
